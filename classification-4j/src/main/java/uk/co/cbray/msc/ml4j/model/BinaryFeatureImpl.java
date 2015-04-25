@@ -3,6 +3,12 @@ package uk.co.cbray.msc.ml4j.model;
 import uk.co.cbray.msc.ml4j.api.Feature;
 import uk.co.cbray.msc.ml4j.exceptions.InvalidArgumentException;
 
+/**
+ * BinaryFeatureImpl is an implementation of the Feature interface which
+ * supports boolean values.
+ * 
+ * @author Connor Bray
+ */
 public class BinaryFeatureImpl implements Feature {
 
 	private Boolean value;

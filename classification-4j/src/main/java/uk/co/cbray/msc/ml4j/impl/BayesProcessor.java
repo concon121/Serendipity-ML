@@ -16,7 +16,7 @@ public class BayesProcessor {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(BayesProcessor.class);
 
-	public static Map<Object, Integer> countInstancesPerClass(
+	protected static Map<Object, Integer> countInstancesPerClass(
 			List<Instance> dataSet) {
 		
 		Map<Object, Integer> count = new HashMap<Object, Integer>();
@@ -47,7 +47,7 @@ public class BayesProcessor {
 		return count;
 	}
 
-	public static Map<Object, List<Instance>> sortByClass(
+	protected static Map<Object, List<Instance>> sortByClass(
 			List<Instance> dataSet) {
 		
 		Map<Object, List<Instance>> ordered = new HashMap<Object, List<Instance>>();

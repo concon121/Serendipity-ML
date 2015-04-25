@@ -3,6 +3,12 @@ package uk.co.cbray.msc.ml4j.model;
 import uk.co.cbray.msc.ml4j.api.Feature;
 import uk.co.cbray.msc.ml4j.exceptions.InvalidArgumentException;
 
+/**
+ * LiteralFeatureImpl is an implementation of the Feature interface which
+ * supports String values.
+ * 
+ * @author Connor Bray
+ */
 public class LiteralFeatureImpl implements Feature {
 
 	private String value;

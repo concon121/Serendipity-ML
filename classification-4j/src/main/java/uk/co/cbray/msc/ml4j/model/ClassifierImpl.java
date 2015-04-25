@@ -2,6 +2,11 @@ package uk.co.cbray.msc.ml4j.model;
 
 import uk.co.cbray.msc.ml4j.api.Classifier;
 
+/**
+ * ClassifierImpl is an implementation of the Classifier interface.
+ * 
+ * @author Connor Bray
+ */
 public class ClassifierImpl implements Classifier{
 	
 	private Object classifier;

@@ -19,14 +19,37 @@ import uk.co.cbray.msc.ml4j.exceptions.InvalidDataSetException;
 import uk.co.cbray.msc.ml4j.exceptions.InvalidInstanceException;
 import uk.co.cbray.msc.ml4j.model.ClassifierImpl;
 
+/**
+ * The Classification4J class provides static methods for classifying data. The
+ * methods in this class should be considered controller methods which delegate
+ * the bulk of the processing to the BayesProcessor and KNNProcessor classes.
+ * 
+ * @author Connor Bray
+ */
 public class Classification4J {
 
 	public static final Logger LOG = LoggerFactory
 			.getLogger(Classification4J.class);
 
-	public static Instance classify(Instance unclassified, List<Instance> dataSet)
-			throws InvalidInstanceException, InvalidDataSetException,
-			InvalidArgumentException {
+	/**
+	 * Allows the user to classify their instance based on the training set
+	 * provided. This method uses the K nearest neighbours algorithm, which
+	 * finds the top matches based on distance from the unclassified instance
+	 * and then allows the K top matches to vote on the most likely
+	 * classification.
+	 * 
+	 * @param unclassified
+	 *            The instance to classify.
+	 * @param dataSet
+	 *            The training set.
+	 * @return The classified instance.
+	 * @throws InvalidInstanceException
+	 * @throws InvalidDataSetException
+	 * @throws InvalidArgumentException
+	 */
+	public static Instance classify(Instance unclassified,
+			List<Instance> dataSet) throws InvalidInstanceException,
+			InvalidDataSetException, InvalidArgumentException {
 
 		LOG.trace("Starting classification of instance.");
 
@@ -73,89 +96,116 @@ public class Classification4J {
 		return unclassified;
 
 	}
-	
-	public static Map<Object, Double> classifyWithProbabilities(Instance unclassified, List<Instance> dataSet) throws InvalidArgumentException {
-		
+
+	/**
+	 * Allows the user to find the relative probabilities that their instance
+	 * will be classified as any of the classifications in the training set.
+	 * This method uses the naive bayes classification algorithm.
+	 * 
+	 * @param unclassified
+	 *            The instance to classify.
+	 * @param dataSet
+	 *            The training set.
+	 * @return A map containing all of the given classifications and the
+	 *         calculated probabilities.
+	 * @throws InvalidArgumentException
+	 */
+	public static Map<Object, Double> classifyWithProbabilities(
+			Instance unclassified, List<Instance> dataSet)
+			throws InvalidArgumentException {
+
 		LOG.trace("Starting classification with probabilities.");
-		
+
 		int dataSetSize = dataSet.size();
-		
+
 		Map<Object, Double> probabilities = new HashMap<Object, Double>();
-		
-		Map<Object, Integer> count = BayesProcessor.countInstancesPerClass(dataSet);
-		
+
+		Map<Object, Integer> count = BayesProcessor
+				.countInstancesPerClass(dataSet);
+
 		int totalFeatures = 0;
-		
-		Map<Object, List<Instance>> classInstances = BayesProcessor.sortByClass(dataSet);
+
+		Map<Object, List<Instance>> classInstances = BayesProcessor
+				.sortByClass(dataSet);
 		Set<Entry<Object, List<Instance>>> entrySet = classInstances.entrySet();
-		
+
 		Map<Object, Map<String, Integer>> countMap = new HashMap<Object, Map<String, Integer>>();
-		
+
 		// For each class
 		for (Entry<Object, List<Instance>> entry : entrySet) {
-			
-			LOG.debug("Begin class: " + entry.getKey());
-			
+
+			LOG.trace("Begin class: " + entry.getKey());
+
 			Map<String, Integer> featureCount = new HashMap<String, Integer>();
 			List<Instance> instances = entry.getValue();
-			
-			if (instances != null ) {
-				
+
+			if (instances != null) {
+
 				// for each instance
 				for (Instance instance : instances) {
-					LOG.debug("Begin instance: " + instance);
-					
+					LOG.trace("Begin instance: " + instance);
+
 					// for reach feature
-					for(Feature feature : instance.getFeatures()) {
-						LOG.debug("Begin feature: " + feature.getFeatureName());
-						Feature unclassifiedFeature = unclassified.getFeature(feature.getFeatureName());
-						
+					for (Feature feature : instance.getFeatures()) {
+						LOG.trace("Begin feature: " + feature.getFeatureName());
+						Feature unclassifiedFeature = unclassified
+								.getFeature(feature.getFeatureName());
+
 						if (unclassifiedFeature != null) {
-							
-							Integer currentFeatureCount = featureCount.get(feature.getFeatureName());
-							
+
+							Integer currentFeatureCount = featureCount
+									.get(feature.getFeatureName());
+
 							if (currentFeatureCount == null) {
 								currentFeatureCount = 0;
 							}
-							
-							currentFeatureCount += unclassifiedFeature.compareValues(feature, dataSetSize);
-							LOG.debug(feature.getFeatureName() + ": " + currentFeatureCount);
-							featureCount.put(feature.getFeatureName(), currentFeatureCount);
+
+							currentFeatureCount += unclassifiedFeature
+									.compareValues(feature, dataSetSize);
+							LOG.trace(feature.getFeatureName() + ": "
+									+ currentFeatureCount);
+							featureCount.put(feature.getFeatureName(),
+									currentFeatureCount);
 							totalFeatures++;
-							
+
 						}
-						
+
 					}
-				
+
 				}
-				
+
 			}
-			
+
 			countMap.put(entry.getKey(), featureCount);
-			
+
 		}
-		
-		Set<Entry<Object, Map<String, Integer>>> fcTempName = countMap.entrySet();
-		
-		for(Entry<Object, Map<String, Integer>> entry : fcTempName) {
-			
+
+		Set<Entry<Object, Map<String, Integer>>> countMapEntries = countMap
+				.entrySet();
+
+		for (Entry<Object, Map<String, Integer>> entry : countMapEntries) {
+
 			double conditionalProbability = 0;
-			
+
 			Map<String, Integer> currentCount = entry.getValue();
 			if (currentCount != null) {
-				Set<Entry<String, Integer>> currentFeatureCount = currentCount.entrySet();
+				Set<Entry<String, Integer>> currentFeatureCount = currentCount
+						.entrySet();
 				for (Entry<String, Integer> featureEntry : currentFeatureCount) {
-					conditionalProbability += ((double)featureEntry.getValue()) / totalFeatures;
-					LOG.debug(featureEntry.getKey() + ": " + featureEntry.getValue() + "/" + totalFeatures + "=" + conditionalProbability);
+					conditionalProbability += ((double) featureEntry.getValue())
+							/ totalFeatures;
+					LOG.trace(featureEntry.getKey() + ": "
+							+ featureEntry.getValue() + "/" + totalFeatures
+							+ "=" + conditionalProbability);
 				}
 			}
-			
+
 			probabilities.put(entry.getKey(), conditionalProbability);
-			
+
 		}
-		
+
 		LOG.trace("Ending classification with probabilities.");
-		
+
 		return probabilities;
 	}
 

@@ -2,7 +2,11 @@ package uk.co.cbray.msc.ml4j.api;
 
 import java.util.List;
 
-
+/**
+ * An instance associates a set of features with a particular classification.
+ * 
+ * @author Connor Bray
+ */
 public interface Instance {
 
 	public void addFeature(Feature feature);

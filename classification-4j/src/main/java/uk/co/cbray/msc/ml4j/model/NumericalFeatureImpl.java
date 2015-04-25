@@ -5,6 +5,12 @@ import java.math.BigDecimal;
 import uk.co.cbray.msc.ml4j.api.Feature;
 import uk.co.cbray.msc.ml4j.exceptions.InvalidArgumentException;
 
+/**
+ * NumericalFeatureImpl is an implementation of the Feature interface which
+ * supports number values.
+ * 
+ * @author Connor Bray
+ */
 public class NumericalFeatureImpl implements Feature {
 
 	private BigDecimal value;

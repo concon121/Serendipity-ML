@@ -7,6 +7,11 @@ import uk.co.cbray.msc.ml4j.api.Classifier;
 import uk.co.cbray.msc.ml4j.api.Feature;
 import uk.co.cbray.msc.ml4j.api.Instance;
 
+/**
+ * InstanceImpl is an implementation of the Instance interface.
+ * 
+ * @author Connor Bray
+ */
 public class InstanceImpl implements Instance{
 	
 	private List<Feature> features;
