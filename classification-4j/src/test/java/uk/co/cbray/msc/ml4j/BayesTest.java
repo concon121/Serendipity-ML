@@ -1,5 +1,7 @@
 package uk.co.cbray.msc.ml4j;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,6 +13,9 @@ import uk.co.cbray.msc.ml4j.api.Instance;
 import uk.co.cbray.msc.ml4j.exceptions.InvalidArgumentException;
 import uk.co.cbray.msc.ml4j.exceptions.InvalidDataSetException;
 import uk.co.cbray.msc.ml4j.exceptions.InvalidInstanceException;
+import uk.co.cbray.msc.ml4j.testclasses.ClassifierOne;
+import uk.co.cbray.msc.ml4j.testclasses.ClassifierThree;
+import uk.co.cbray.msc.ml4j.testclasses.ClassifierTwo;
 
 public class BayesTest {
 	
@@ -31,10 +36,27 @@ public class BayesTest {
 		Map<Object, Double> probabilities = uk.co.cbray.msc.ml4j.impl.Classification4J.classifyWithProbabilities(unclassified, dataSet);
 		Set<Entry<Object, Double>> entrySet = probabilities.entrySet();
 		
-		System.out.println("Binary: ");
+		double classOne = 0;
+		double classTwo = 0;
+		double classThree = 0;
+		
 		for (Entry<Object, Double> entry : entrySet) {
-			System.out.println(entry.getKey() + " : " + entry.getValue());
+			if (((Class<?>)entry.getKey()) == ClassifierOne.class) {
+				classOne = entry.getValue();
+			} else if (((Class<?>)entry.getKey()) == ClassifierTwo.class) {
+				classTwo = entry.getValue();
+			} else if (((Class<?>)entry.getKey()) == null) {
+				classThree = entry.getValue();
+			}
 		}
+		
+		// cOne = 9
+		// cTwo = 4
+		// cThree = 1
+		
+		assertTrue(classOne > classTwo);
+		assertTrue(classOne > classThree);
+		assertTrue(classTwo > classThree);
 		
 	}
 	
@@ -55,10 +77,27 @@ public class BayesTest {
 		Map<Object, Double> probabilities = uk.co.cbray.msc.ml4j.impl.Classification4J.classifyWithProbabilities(unclassified, dataSet);
 		Set<Entry<Object, Double>> entrySet = probabilities.entrySet();
 		
-		System.out.println("Literal: ");
+		double classOne = 0;
+		double classTwo = 0;
+		double classThree = 0;
+		
 		for (Entry<Object, Double> entry : entrySet) {
-			System.out.println(entry.getKey() + " : " + entry.getValue());
+			if (((Class<?>)entry.getKey()) == ClassifierOne.class) {
+				classOne = entry.getValue();
+			} else if (((Class<?>)entry.getKey()) == ClassifierTwo.class) {
+				classTwo = entry.getValue();
+			} else if (((Class<?>)entry.getKey()) == ClassifierThree.class) {
+				classThree = entry.getValue();
+			}
 		}
+		
+		// cOne = 6
+		// cTwo = 6
+		// cThree = 1
+		
+		assertTrue(classTwo == classOne);
+		assertTrue(classTwo > classThree);
+		assertTrue(classOne > classThree);
 	}
 	/**
 	 * Data set contains 6 instances:
@@ -77,10 +116,27 @@ public class BayesTest {
 		Map<Object, Double> probabilities = uk.co.cbray.msc.ml4j.impl.Classification4J.classifyWithProbabilities(unclassified, dataSet);
 		Set<Entry<Object, Double>> entrySet = probabilities.entrySet();
 		
-		System.out.println("Number: ");
+		double classOne = 0;
+		double classTwo = 0;
+		double classThree = 0;
+		
 		for (Entry<Object, Double> entry : entrySet) {
-			System.out.println(entry.getKey() + " : " + entry.getValue());
+			if (((Class<?>)entry.getKey()) == ClassifierOne.class) {
+				classOne = entry.getValue();
+			} else if (((Class<?>)entry.getKey()) == ClassifierTwo.class) {
+				classTwo = entry.getValue();
+			} else if (((Class<?>)entry.getKey()) == ClassifierThree.class) {
+				classThree = entry.getValue();
+			}
 		}
+		
+		// cOne = 3
+		// cTwo = 4
+		// cThree = 3
+		
+		assertTrue(classTwo > classOne);
+		assertTrue(classTwo > classThree);
+		assertTrue(classOne == classThree);
 	}
 	
 	/**
@@ -101,10 +157,27 @@ public class BayesTest {
 		Map<Object, Double> probabilities = uk.co.cbray.msc.ml4j.impl.Classification4J.classifyWithProbabilities(unclassified, dataSet);
 		Set<Entry<Object, Double>> entrySet = probabilities.entrySet();
 		
-		System.out.println("Mixed: ");
+		double classOne = 0;
+		double classTwo = 0;
+		double classThree = 0;
+		
 		for (Entry<Object, Double> entry : entrySet) {
-			System.out.println(entry.getKey() + " : " + entry.getValue());
+			if (((Class<?>)entry.getKey()) == ClassifierOne.class) {
+				classOne = entry.getValue();
+			} else if (((Class<?>)entry.getKey()) == ClassifierTwo.class) {
+				classTwo = entry.getValue();
+			} else if (((Class<?>)entry.getKey()) == null) {
+				classThree = entry.getValue();
+			}
 		}
+		
+		// cOne = 3
+		// cTwo = 8
+		// null = 2
+		
+		assertTrue(classTwo > classOne);
+		assertTrue(classTwo > classThree);
+		assertTrue(classOne > classThree);
 	}
 	
 }
