@@ -67,7 +67,6 @@ public class KNNProcessor {
 			}
 			value++;
 			classifierCount.put(currentClass, value);
-			System.out.println(currentClass + " " + value);
 		}
 	}
 
