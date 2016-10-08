@@ -1,4 +1,4 @@
-# classification4j
+# Classification4j
 
 A simple machine learning classification api for java.
 
